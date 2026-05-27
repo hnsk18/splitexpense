@@ -75,7 +75,6 @@ const createGroup = async (req, res) => {
         
         let mem = [];
         
-        // Fix: Use for...of instead of for...in to iterate array elements
         for (let member of members) {
             const memData = await userModel.findOne({ upi: member.upi });
             if (!memData) {
@@ -115,7 +114,6 @@ const createGroup = async (req, res) => {
             });
         }
         
-        // CRITICAL UPDATE: Add the created group's _id to all members' groups array
         // Update creator
         await userModel.findByIdAndUpdate(user._id, { $push: { groups: response._id } });
         
@@ -143,8 +141,8 @@ const createGroup = async (req, res) => {
 
 const addMember = async (req, res) => {
     try {
-        const { groupId } = req.params; // This parameter holds the group code
-        const { newMember } = req.body; // Single object: { upi: '...', name: '...' }
+        const { groupId } = req.params; 
+        const { newMember } = req.body; 
         
         // Find group by its code instead of ObjectId findById
         const groupData = await groupModel.findOne({ code: groupId });
@@ -189,7 +187,7 @@ const addMember = async (req, res) => {
 
         const newMemberObj = {
             upi: memData.upi,
-            name: memData.name, // Use registered name from DB
+            name: memData.name, 
             balances: newUserBalances,
             total: 0
         };
