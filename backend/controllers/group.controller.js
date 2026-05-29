@@ -81,7 +81,7 @@ const createGroup = async (req, res) => {
             }
             mem.push({
                 upi: memData.upi,
-                name: memData.name, 
+                name: member.name.trim() || memData.name, 
                 balances: [],
                 total: 0
             });
@@ -198,7 +198,7 @@ const addMember = async (req, res) => {
 
         const newMemberObj = {
             upi: memData.upi,
-            name: newMember.name || memData.name, 
+            name: newMember.name.trim() || memData.name, 
             balances: newUserBalances,
             total: 0
         };
