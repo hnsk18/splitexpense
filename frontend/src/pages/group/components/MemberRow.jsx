@@ -26,7 +26,7 @@ const MemberRow = ({ member, updateMemberValue, toggleChecked, splitType }) => {
             {member.checked && (
                 <>
                     {splitType !== "amount" && member.calculatedAmount !== undefined && (
-                        <div className={`text-sm font-medium ${member.calculatedAmount > 0 ? "text-green-600" : "text-red-500"}`}>
+                        <div className={`text-sm font-medium ${member.calculatedAmount >= 0 ? "text-green-600" : "text-red-500"}`}>
                             <span >₹{member.calculatedAmount}</span>
                         </div>
                     )}
