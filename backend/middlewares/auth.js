@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+const JWT_SECRET="splitexpensejwt";
 const auth = (req, res, next) => {
 
     const header = req.headers.authorization;
@@ -17,7 +17,7 @@ const auth = (req, res, next) => {
 
         const decoded = jwt.verify(
             token,
-            process.env.JWT_SECRET
+            JWT_SECRET
         );
 
         req.user = decoded;
