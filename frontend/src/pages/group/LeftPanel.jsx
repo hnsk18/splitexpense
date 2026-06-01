@@ -1,6 +1,5 @@
-// LeftPanel.jsx
-
 import React from "react";
+import { useSearchParams } from "react-router-dom";
 import {
     ChevronDown,
     Copy,
@@ -64,6 +63,8 @@ const expenses = [
 ];
 
 const LeftPanel = ({ setSplitPanelActive }) => {
+    const [searchParams] = useSearchParams();
+    const groupId = searchParams.get("gc");
     return (
         <aside className="w-full xl:w-80 xl:shrink-0 h-full min-h-0 self-stretch bg-white border border-gray-200 rounded-2xl shadow-[0_14px_36px_rgba(15,23,42,0.08)] p-4 flex flex-col overflow-hidden">
 
@@ -114,13 +115,13 @@ const LeftPanel = ({ setSplitPanelActive }) => {
                         <div className="flex items-center gap-2.5 min-w-0">
 
                             <div className="bg-white border border-gray-200 px-3 py-2 rounded-lg text-sm font-semibold tracking-[0.18em] text-gray-800 shadow-sm">
-                                087358
+                                {groupId}
                             </div>
                             <button
                                 className="copy-btn flex items-center gap-1.5 shrink-0 cursor-pointer rounded-2xl
                                     active:bg-gray-300 active:border active:border-gray-200 p-1.5 transition-transform hover:scale-105"
                                 onClick={() => {
-                                    navigator.clipboard.writeText("087358")
+                                    navigator.clipboard.writeText(groupId)
                                     toast.success("Group code copied to clipboard!");
                                 }}
                             >
@@ -131,7 +132,7 @@ const LeftPanel = ({ setSplitPanelActive }) => {
                             <button
                                 className="flex items-center gap-1.5 text-xs font-semibold text-blue-500 hover:text-blue-600 shrink-0 transition opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto"
                                 onClick={() => {
-                                    navigator.clipboard.writeText("087358")
+                                    navigator.clipboard.writeText(groupId)
                                     toast.success("Group code copied to clipboard!");
                                 }}
                             >

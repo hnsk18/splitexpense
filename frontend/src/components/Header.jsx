@@ -1,11 +1,11 @@
-// Header.jsx
 import React, { useState } from "react";
 import { Bell, ChevronDown, ChevronUp } from "lucide-react";
 import logo from "../assets/logo.png";
-
 import ProfilePopup from "./ProfilePopup";
 const Header = () => {
   const [showProfile, setShowProfile] = useState(false);
+  const { user } = useAuth();
+
   return (
     <header className="w-full flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200">
       {/* Left Section */}
@@ -38,7 +38,7 @@ const Header = () => {
             />
 
             <div className="hidden sm:block">
-              <p className="text-sm font-semibold text-gray-800">Rohan</p>
+              <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
             </div>
 
             {showProfile ? (
@@ -49,7 +49,7 @@ const Header = () => {
           </button>
 
           {/* Popup */}
-          {showProfile && <ProfilePopup />}
+          {showProfile && <ProfilePopup onClose={() => setShowProfile(false)} />}
         </div>
       </div>
     </header>
