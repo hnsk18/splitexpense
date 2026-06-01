@@ -2,22 +2,53 @@ const express = require("express");
 
 const router = express.Router();
 
-const userController = require("../controllers/user.controller");
-
 const auth = require("../middlewares/auth");
+
+const {
+    register,
+    login,
+    profile,
+    updateProfile,
+    getNameByUpi,
+    getByPhone,
+    getGroups,
+    changePassword
+} = require("../controllers/user.controller");
 
 
 // PUBLIC ROUTES
-router.post("/public/register", userController.register);
+router.post("/public/register", register);
 
-router.post("/public/login", userController.login);
+router.post("/public/login", login);
+
+router.get("/public/:upi/name", getNameByUpi);
+
+router.get("/public/:phone", getByPhone);
 
 
 // PRIVATE ROUTES
 router.get(
-    "/user/getprofile",
+    "/user/profile",
     auth,
-    userController.getProfile
+    profile
+);
+
+router.put(
+    "/user/profile",
+    auth,
+    updateProfile
+);
+
+router.get(
+    "/user/group/getall",
+    auth,
+    getGroups
+);
+
+router.post(
+    "/user/change-password",
+    auth,
+    changePassword
 );
 
 module.exports = router;

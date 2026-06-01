@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const Group = require("../models/group.model");
 
 // REGISTER
 exports.register = async (req, res) => {
@@ -99,7 +99,7 @@ exports.login = async (req, res) => {
 
 
 // GET PROFILE
-exports.getProfile = async (req, res) => {
+exports.profile = async (req, res) => {
 
     try {
 
@@ -108,6 +108,158 @@ exports.getProfile = async (req, res) => {
 
         res.json({
             user,
+            status: true
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            message: err.message,
+            status: false
+        });
+    }
+};
+
+exports.updateProfile = async (req, res) => {
+
+    try {
+
+        const { name } = req.body;
+
+        await User.findByIdAndUpdate(
+            req.user.id,
+            { name }
+        );
+
+        res.json({
+            message: "Profile updated successfully",
+            status: true
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            message: err.message,
+            status: false
+        });
+    }
+};
+
+exports.getNameByUpi = async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({
+            upi: req.params.upi
+        });
+
+        if (!user) {
+
+            return res.status(404).json({
+                message: "User not found",
+                status: false
+            });
+        }
+
+        res.json({
+            name: user.name,
+            status: true
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            message: err.message,
+            status: false
+        });
+    }
+};
+
+exports.getByPhone = async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({
+            phone: req.params.phone
+        });
+
+        if (!user) {
+
+            return res.status(404).json({
+                message: "User not found",
+                status: false
+            });
+        }
+
+        res.json({
+            name: user.name,
+            upi: user.upi,
+            status: true
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            message: err.message,
+            status: false
+        });
+    }
+};
+
+exports.getGroups = async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.user.id)
+            .populate("groups");
+
+        res.json({
+            groups: user.groups,
+            status: true
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            message: err.message,
+            status: false
+        });
+    }
+};
+
+
+exports.changePassword = async (req, res) => {
+
+    try {
+
+        const { oldPassword, newPassword } = req.body;
+
+        const user = await User.findById(req.user.id);
+
+        const match = await bcrypt.compare(
+            oldPassword,
+            user.password
+        );
+
+        if (!match) {
+
+            return res.status(400).json({
+                message: "Old password incorrect",
+                status: false
+            });
+        }
+
+        const hashed = await bcrypt.hash(
+            newPassword,
+            10
+        );
+
+        user.password = hashed;
+
+        await user.save();
+
+        res.json({
+            message: "Password changed successfully",
             status: true
         });
 
