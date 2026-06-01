@@ -1,8 +1,11 @@
 # Split Expense API
+
 // Maintain the integrity in the naming conventions and the structure of the API documentation. Ensure that all endpoints are clearly defined with their respective request and response formats. Include any necessary authentication details and error handling mechanisms for a comprehensive API documentation.
+
 ## Schema
 
 ### User Schema
+
 ```json
 {
     phone: {
@@ -31,6 +34,7 @@
 ```
 
 ### Group Schema
+
 ```json
 {
     code: {
@@ -91,6 +95,7 @@
 ```
 
 ### Transaction Schema
+
 ```json
 {
     by: {
@@ -135,8 +140,10 @@
 ## User
 
 ### Register a User
-**Endpoint:** `POST /register`
+
+**Endpoint:** `POST /public/register`
 **Request Body:**
+
 ```json
 {
   "phone": "1234567890",
@@ -145,7 +152,9 @@
   "password": "password123"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "User created successfully",
@@ -154,15 +163,19 @@
 ```
 
 ### Login a User
-**Endpoint:** `POST /login`
+
+**Endpoint:** `POST /public/login`
 **Request Body:**
+
 ```json
 {
   "phone": "1234567890",
   "password": "password123"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Login successful",
@@ -172,10 +185,12 @@
 ```
 
 ### Get User Profile
-**Endpoint:** `GET /profile`
+
+**Endpoint:** `GET /user/getprofile`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Response:**
+
 ```json
 {
   "phone": "1234567890",
@@ -192,16 +207,20 @@
 ```
 
 ### Update User Profile
-**Endpoint:** `PUT /profile`
+
+**Endpoint:** `PUT /user/profile`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "name": "User One Updated"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Profile updated successfully",
@@ -210,8 +229,10 @@
 ```
 
 ### Get User's Name with UPI
-**Endpoint:** `GET /:upi/name`
+
+**Endpoint:** `GET /public/:upi/name`
 **Response:**
+
 ```json
 {
   "name": "User One",
@@ -220,8 +241,10 @@
 ```
 
 ### Get User's Name and UPI with Phone Number
-**Endpoint:** `GET /:phone`
+
+**Endpoint:** `GET /public/:phone`
 **Response:**
+
 ```json
 {
   "name": "User One",
@@ -231,18 +254,20 @@
 ```
 
 ### Get User Groups
-**Endpoint:** `GET /group/getall`
+
+**Endpoint:** `GET /user/group/getall`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Response:**
+
 ```json
 {
   "groups": [
     {
       "name": "Friends Group",
       "createdBy": "Name",
-      "receiveableamount": 150.00,
-      "payableamount": 50.00,
+      "receiveableamount": 150.0,
+      "payableamount": 50.0,
       "totalMembers": 5,
       "groupCode": "123456"
     }
@@ -252,17 +277,21 @@
 ```
 
 ### Change Password
-**Endpoint:** `POST /change-password`
+
+**Endpoint:** `POST /user/change-password`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "oldPassword": "password123",
   "newPassword": "newpassword456"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Password changed successfully",
@@ -271,24 +300,28 @@
 ```
 
 ## Group
+
 ### Create a Group
 
 **Endpoint:** `POST /group/create`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "name": "Friends Group",
   "members": [
-    { "upi": "user1@upi", "name": "User One"},
-    { "upi": "user2@upi", "name": "User Two"},
-    { "upi": "user3@upi", "name": "User Three"}
+    { "upi": "user1@upi", "name": "User One" },
+    { "upi": "user2@upi", "name": "User Two" },
+    { "upi": "user3@upi", "name": "User Three" }
   ],
   "createdBy": "user1@upi"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Group created successfully",
@@ -298,18 +331,20 @@
 ```
 
 ### Get Group Details
+
 **Endpoint:** `GET /group/:groupId`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Response:**
+
 ```json
 {
   "code": "000001",
   "name": "Friends Group",
   "members": [
-    {"upi": "user1@upi", "amount": 300},
-    { "upi": "user2@upi", "amount": 100},
-    { "upi": "user3@upi", "amount": 200}
+    { "upi": "user1@upi", "amount": 300 },
+    { "upi": "user2@upi", "amount": 100 },
+    { "upi": "user3@upi", "amount": 200 }
   ],
   "createdBy": "user1@upi",
   "status": true
@@ -317,47 +352,55 @@
 ```
 
 ### Add a new member to the group
+
 **Endpoint:** `POST /group/:groupId/member`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "groupId": "000001",
-  "newMember": { "upi": "user4@upi", "name": "User Four"}
+  "newMember": { "upi": "user4@upi", "name": "User Four" }
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Members added successfully",
   "members": [
-    {"upi": "user1@upi", "amount": 300},
-    { "upi": "user2@upi", "amount": 100},
-    { "upi": "user3@upi", "amount": 200},
-    { "upi": "user4@upi", "amount": 0},
-    { "upi": "user5@upi", "amount": 0}
+    { "upi": "user1@upi", "amount": 300 },
+    { "upi": "user2@upi", "amount": 100 },
+    { "upi": "user3@upi", "amount": 200 },
+    { "upi": "user4@upi", "amount": 0 },
+    { "upi": "user5@upi", "amount": 0 }
   ],
   "status": true
 }
 ```
 
 ### Join a Group
+
 **Endpoint:** `POST /group/join`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "groupId": "000001"
 }
 ```
+
 **Response:**```json
 {
-  "message": "Joined group successfully",
-  "status": true
+"message": "Joined group successfully",
+"status": true
 }
-```
+
+````
 
 ### Leave a Group (Only if the member has zero balance)
 **Endpoint:** `POST /group/leave`
@@ -368,8 +411,10 @@
 {
   "groupId": "000000"
 }
-```
+````
+
 **Response:**
+
 ```json
 {
   "message": "Left group successfully",
@@ -380,10 +425,12 @@
 ## Transaction
 
 ### Add a Transaction
+
 **Endpoint:** `POST /group/txn/add`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "groupId": "000001",
@@ -401,7 +448,9 @@
   ]
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Transaction added successfully",
@@ -410,10 +459,12 @@
 ```
 
 ### Get Transactions of a Group in reverse chronological order
+
 **Endpoint:** `GET /group/txn/:groupId`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Response:**
+
 ```json
 {
   "transactions": [
@@ -439,10 +490,12 @@
 ```
 
 ### Get User Transactions in a Group
+
 **Endpoint:** `GET /group/txn/user/:groupId`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Response:**
+
 ```json
 {
   "transactions": [
@@ -468,10 +521,12 @@
 ```
 
 ### Edit a Transaction (Only the user who added the transaction can edit it)
+
 **Endpoint:** `PUT /group/txn/edit/:txnId`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "amount": 350,
@@ -488,7 +543,9 @@
   ]
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Transaction updated successfully",
@@ -497,10 +554,12 @@
 ```
 
 ### Settle a Transaction (Only the user who added the transaction can settle it)
+
 **Endpoint:** `POST /group/txn/settle/:txnId`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Response:**
+
 ```json
 {
   "message": "Transaction settled successfully",
@@ -509,10 +568,12 @@
 ```
 
 ### Revert a Transaction (Only the user who added the transaction can revert it and only if the transaction is not settled)
+
 **Endpoint:** `POST /group/txn/revert/:txnId`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Response:**
+
 ```json
 {
   "message": "Transaction reverted successfully",
@@ -521,7 +582,9 @@
 ```
 
 # Recommended Final API Structure
+
 ## User
+
 ```
 /user/signup
 /user/login
@@ -533,7 +596,9 @@
 /user/name/upi/:upi
 /user/name/phone/:phone
 ```
+
 ## Group
+
 ```
 /group/create
 /group/join
@@ -543,7 +608,9 @@
 /group/leave
 /group/:groupId
 ```
+
 ## Transaction
+
 ```
 /txn/add
 /txn/:groupId
@@ -555,47 +622,56 @@
 /txn/revert
 ```
 
-
 ## Future Scopes
 
 ### Remove a member from the group (Only if the member has zero balance)
+
 **Endpoint:** `DELETE /group/member`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "groupId": "000001",
   "memberToRemove": "user2@upi"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Member removed successfully",
   "members": [
-    {"upi": "user1@upi", "amount": 300},
-    { "upi": "user3@upi", "amount": 200},
-    { "upi": "user4@upi", "amount": 0},
-    { "upi": "user5@upi", "amount": 0}
+    { "upi": "user1@upi", "amount": 300 },
+    { "upi": "user3@upi", "amount": 200 },
+    { "upi": "user4@upi", "amount": 0 },
+    { "upi": "user5@upi", "amount": 0 }
   ],
   "status": true
 }
 ```
 
 ### Leave a Group (Only if the member has zero balance)
+
 **Endpoint:** `POST /group/leave`
 **Headers:**
-```Authorization: Bearer <jwt_token>```
+`Authorization: Bearer <jwt_token>`
 **Request Body:**
+
 ```json
 {
   "groupId": "000001"
 }
 ```
+
 **Response:**```json
 {
-  "message": "Left group successfully",
-  "status": true
+"message": "Left group successfully",
+"status": true
 }
+
+```
+
 ```

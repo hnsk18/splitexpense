@@ -2,4 +2,4 @@
 
 import { apiFetch } from "./api";
 
-export const getProfile = () => apiFetch("/user/getprofile");
+export const getProfile = () => apiFetch("/user/profile");

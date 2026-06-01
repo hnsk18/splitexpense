@@ -5,7 +5,7 @@ import {
     useState,
 } from "react";
 
-import { getProfile } from "../services/userApi";
+import { getProfile } from "../services/userapi";
 
 const AuthContext = createContext();
 
