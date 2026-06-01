@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { LogOut, Pencil, QrCode } from "lucide-react";
 import UpiQrModal from "./UpiQrModal";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePopup({ onClose }) {
   const dropdownRef = useRef(null);
   const [showQR, setShowQR] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   // Close on outside click
   useEffect(() => {
@@ -97,8 +99,12 @@ export default function ProfilePopup({ onClose }) {
 
       {/* Logout */}
       <button
-        className="flex items-center gap-2 text-red-500 font-medium hover:text-red-600 transition"
-        onClick={() => logout()}
+        className="flex items-center gap-2 text-red-500 font-medium hover:text-red-600 transition active:bg-red-50 active:text-red-700 px-3 py-2 rounded-lg mt-2"
+        onClick={() => {
+          sessionStorage.setItem("splitexpense_logout", "1");
+          logout();
+          navigate("/login", { replace: true });
+        }}
       >
         <LogOut size={18} />
         Logout

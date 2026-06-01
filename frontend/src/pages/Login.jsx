@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../services/api";
-
+import { toast } from "react-toastify";
 import {
   Lock,
   Phone,
@@ -17,11 +17,24 @@ import loginb1 from "../assets/loginb1.png";
 import loginb3 from "../assets/loginb3.png";
 
 function Login() {
+  const location = useLocation();
   const [password, setPassword] = useState("");
   const { loadUser } = useAuth();
   const [phone, setPhone] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const logoutFlag = sessionStorage.getItem("splitexpense_logout");
+
+    if (logoutFlag === "1") {
+      sessionStorage.removeItem("splitexpense_logout");
+      toast.success("Logged out successfully.");
+    } else if (location.state?.unauthorized) {
+      toast.warning("log in to continue.");
+    }
+  }, [])
+
   const handleOnLogin = async (e) => {
     e.preventDefault();
 
@@ -34,11 +47,11 @@ function Login() {
       localStorage.setItem("token", response.token);
 
       await loadUser();
-
-      navigate("/dashboard");
+      toast.success("Logged in successfully!");
+      navigate("/me");
     } catch (err) {
       console.error(err);
-      alert(err.message);
+      toast.error(err.message);
     }
   };
   return (
