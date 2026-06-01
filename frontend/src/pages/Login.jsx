@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { apiFetch } from "../services/api";
 
 import {
   Lock,
@@ -15,9 +17,30 @@ import loginb1 from "../assets/loginb1.png";
 import loginb3 from "../assets/loginb3.png";
 
 function Login() {
+  const [password, setPassword] = useState("");
+  const { loadUser } = useAuth();
+  const [phone, setPhone] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const handleOnLogin = async (e) => {
+    e.preventDefault();
 
+    try {
+      const response = await apiFetch("/public/login", {
+        method: "POST",
+        body: JSON.stringify({ phone, password }),
+      });
+
+      localStorage.setItem("token", response.token);
+
+      await loadUser();
+
+      navigate("/dashboard");
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
   return (
     <div className="min-h-screen bg-white">
       {/* Main Layout */}
@@ -80,8 +103,7 @@ function Login() {
             {/* Feature 3 */}
             <div>
               <div className="w-14 h-14 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-3 text-xl">
-                <img src={loginb3} 
-                alt="loginb3" />
+                <img src={loginb3} alt="loginb3" />
               </div>
 
               <h3 className="font-semibold text-base">Clear & Simple</h3>
@@ -120,6 +142,8 @@ function Login() {
                   type="text"
                   placeholder="+91 98765 43210"
                   className="w-full outline-none ml-4 text-base bg-transparent"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
             </div>
@@ -136,6 +160,8 @@ function Login() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full outline-none ml-4 text-base bg-transparent"
                 />
 
@@ -157,7 +183,10 @@ function Login() {
             </div>
 
             {/* Login Button */}
-            <button className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:opacity-95 text-white py-3 rounded-xl font-semibold text-lg shadow-lg transition">
+            <button
+              className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:opacity-95 text-white py-3 rounded-xl font-semibold text-lg shadow-lg transition"
+              onClick={handleOnLogin}
+            >
               Login
             </button>
 

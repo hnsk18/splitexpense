@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Bell, ChevronDown, ChevronUp } from "lucide-react";
 import logo from "../assets/logo.png";
 import ProfilePopup from "./ProfilePopup";
+import { useAuth } from "../context/AuthContext";
 const Header = () => {
   const [showProfile, setShowProfile] = useState(false);
   const { user } = useAuth();
@@ -38,7 +39,9 @@ const Header = () => {
             />
 
             <div className="hidden sm:block">
-              <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
+              <p className="text-sm font-semibold text-gray-800">
+                {user?.name}
+              </p>
             </div>
 
             {showProfile ? (
@@ -49,7 +52,9 @@ const Header = () => {
           </button>
 
           {/* Popup */}
-          {showProfile && <ProfilePopup onClose={() => setShowProfile(false)} />}
+          {showProfile && (
+            <ProfilePopup onClose={() => setShowProfile(false)} />
+          )}
         </div>
       </div>
     </header>
