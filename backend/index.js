@@ -35,6 +35,7 @@ const corsOptions = {
 
 app.use(cors({
     origin: [
+        "https://b76kbjr1-5173.inc1.devtunnels.ms",
         "https://j4d5bzxn-5173.inc1.devtunnels.ms",
         "http://localhost:3000"
     ],

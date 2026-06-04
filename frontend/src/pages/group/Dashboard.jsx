@@ -7,7 +7,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../services/api'
 import { toast } from 'sonner'
 import { useAuth } from '../../context/AuthContext'
-
 function Dashboard() {
     const [splitPanelActive, setSplitPanelActive] = useState(false);
     const { user } = useAuth();
