@@ -60,9 +60,9 @@ const getAllGroups = async (req, res) => {
 const createGroup = async (req, res) => {
     try {
         const user = req.user;
-        const { name, members } = req.body;
+        let { name, members } = req.body;
 
-        if (members === undefined) {
+        if (!Array.isArray(members)) {
             members = [];
         }
 
@@ -72,9 +72,28 @@ const createGroup = async (req, res) => {
             code = Math.floor(100000 + Math.random() * 900000).toString();
         }
 
-        let mem = [];
+        const seenUpis = new Set();
+        seenUpis.add(user.upi);
+
+        const mem = [];
+
+        // Add creator to the members array
+        mem.push({
+            upi: user.upi,
+            name: user.name,
+            balances: [],
+            total: 0
+        });
 
         for (let member of members) {
+            if (!member || !member.upi) continue;
+
+            // Skip duplicates (including the creator if they were passed in members)
+            if (seenUpis.has(member.upi)) {
+                continue;
+            }
+            seenUpis.add(member.upi);
+
             const memData = await userModel.findOne({ upi: member.upi });
             if (!memData) {
                 return res.json({
@@ -89,14 +108,6 @@ const createGroup = async (req, res) => {
                 total: 0
             });
         }
-
-        // Add creator to the members array
-        mem.push({
-            upi: user.upi,
-            name: user.name,
-            balances: [],
-            total: 0
-        });
 
         // Initialize balances between all members
         for (let i = 0; i < mem.length; i++) {
@@ -126,14 +137,11 @@ const createGroup = async (req, res) => {
             });
         }
 
-        // Update creator
-        await userModel.findOneAndUpdate({ upi: user.upi }, { $push: { groups: response._id } });
-
-        // Update other members
-        for (let member of members) {
+        // Update groups list for all unique members (including creator)
+        for (let upi of seenUpis) {
             await userModel.findOneAndUpdate(
-                { upi: member.upi },
-                { $push: { groups: response._id } }
+                { upi: upi },
+                { $addToSet: { groups: response._id } }
             );
         }
 
@@ -142,7 +150,6 @@ const createGroup = async (req, res) => {
             message: "Group created successfully",
             code: response.code
         });
-
 
     } catch (error) {
         return res.json({
